@@ -14,6 +14,13 @@ export class Stream extends sdk.Models.Stream {
   tvgId?: string
   label: string | null
   statusCode?: string
+  metadata?: {
+    bitrate?: number
+    width?: number
+    height?: number
+    duration?: number
+    codec?: string
+  }
 
   updateWithIssue(issueData: IssueData): this {
     const data = {

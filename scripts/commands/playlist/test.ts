@@ -102,6 +102,7 @@ async function runTest(stream: Stream) {
   stream.statusCode = 'LOADING...'
   const result: StreamTesterResult = await tester.test(stream)
   stream.statusCode = result.status.code
+  stream.metadata = result.metadata
 
   if (stream.statusCode === 'OK') return
   if (errorStatusCodes.includes(stream.statusCode) && !stream.label) {
@@ -125,7 +126,9 @@ function drawTable() {
         { name: 'tvg-id', alignment: 'left', color: 'green', minLen: 25, maxLen: 25 },
         { name: 'url', alignment: 'left', color: 'green', minLen: 100, maxLen: 100 },
         { name: 'label', alignment: 'left', color: 'yellow', minLen: 13, maxLen: 13 },
-        { name: 'status', alignment: 'left', minLen: 25, maxLen: 25 }
+        { name: 'status', alignment: 'left', minLen: 25, maxLen: 25 },
+        { name: 'resolution', alignment: 'left', minLen: 10, maxLen: 10 },
+        { name: 'bitrate', alignment: 'left', minLen: 10, maxLen: 10 }
       ]
     })
 
@@ -135,13 +138,17 @@ function drawTable() {
       const color = getColor(stream)
       const label = stream.label || ''
       const status = stream.statusCode || 'PENDING'
+      const resolution = stream.metadata?.width && stream.metadata?.height ? `${stream.metadata.width}x${stream.metadata.height}` : ''
+      const bitrate = stream.metadata?.bitrate ? `${Math.round(stream.metadata.bitrate / 1000)}k` : ''
 
       const row = {
         '': index,
         'tvg-id': chalk[color](tvgId),
         url: chalk[color](url),
         label: chalk[color](label),
-        status: chalk[color](status)
+        status: chalk[color](status),
+        resolution: chalk[color](resolution),
+        bitrate: chalk[color](bitrate)
       }
       table.append(row)
     })

@@ -14,6 +14,7 @@ module.exports = {
   'https://59d39900ebfb8.streamlock.net/bahartv/bahartv/playlist.m3u8': {
     url: 'https://59d39900ebfb8.streamlock.net/bahartv/bahartv/playlist.m3u8',
     http: { referrer: '', 'user-agent': '' },
-    status: { ok: false, code: 'HTTP_404_NOT_FOUND', message: 'HTTP 404 Not Found' }
+    status: { ok: true, code: 'OK' },
+    metadata: { bitrate: 1500000, width: 1920, height: 1080, codec: 'H.264' }
   }
 }

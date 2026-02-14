@@ -6,10 +6,26 @@ import { OptionValues } from 'commander'
 import { TESTING } from '../constants'
 import { Stream } from '../models'
 
+type MediaInfoTrack = {
+  '@type': string
+  BitRate?: string
+  Width?: string
+  Height?: string
+  Duration?: string
+  Format?: string
+}
+
 export type StreamTesterResult = {
   status: {
     ok: boolean
     code: string
+  }
+  metadata?: {
+    bitrate?: number
+    width?: number
+    height?: number
+    duration?: number
+    codec?: string
   }
 }
 
@@ -76,11 +92,21 @@ export class StreamTester {
         )
 
         if (result && result.media && result.media.track.length > 0) {
+          const videoTrack = result.media.track.find((track: MediaInfoTrack) => track['@type'] === 'Video')
+          const metadata = videoTrack ? {
+            bitrate: videoTrack.BitRate ? parseInt(videoTrack.BitRate) : undefined,
+            width: videoTrack.Width ? parseInt(videoTrack.Width) : undefined,
+            height: videoTrack.Height ? parseInt(videoTrack.Height) : undefined,
+            duration: videoTrack.Duration ? parseFloat(videoTrack.Duration) : undefined,
+            codec: videoTrack.Format
+          } : undefined
+
           return {
             status: {
               ok: true,
               code: 'OK'
-            }
+            },
+            metadata
           }
         } else {
           return {
